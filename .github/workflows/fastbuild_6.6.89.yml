@@ -592,8 +592,8 @@ jobs:
               https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/main/patch/susfs.patch
           fi
           patch -p1 -F 3 < "$PATCH_FILE"
-          grep -q '^CONFIG_HYMOFS=y$' common/arch/arm64/configs/gki_defconfig || \
-            echo 'CONFIG_HYMOFS=y' >> common/arch/arm64/configs/gki_defconfig
+          grep -q '^CONFIG_HYMOFS=y$' ./arch/arm64/configs/gki_defconfig || \
+            echo 'CONFIG_HYMOFS=y' >> ./arch/arm64/configs/gki_defconfig
 
           
       - name: 添加制作名称
