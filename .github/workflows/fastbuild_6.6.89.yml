@@ -589,12 +589,10 @@ jobs:
           else
             echo "Using HymoFS patch without SUSFS"
             wget -q -O "$PATCH_FILE" \
-              https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/main/patch/susfs.patch
+              https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/main/patch/hymofs.patch
           fi
           patch -p1 -F 3 < "$PATCH_FILE"
-          grep -q '^CONFIG_HYMOFS=y$' ./arch/arm64/configs/gki_defconfig || \
-            echo 'CONFIG_HYMOFS=y' >> ./arch/arm64/configs/gki_defconfig
-
+          echo "CONFIG_HYMOFS=y" >> ./common/arch/arm64/configs/gki_defconfig
           
       - name: 添加制作名称
         run: |
