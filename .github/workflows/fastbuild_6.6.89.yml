@@ -191,7 +191,7 @@ jobs:
             ccache -sv
           fi
 
-      - name: 添加 KernelSU (${{ inputs.sukisu_branch }})
+      - name: 添加 KernelSU (${{ inputs.sukisu_branch }})${{ inputs.kernelsu_author }}
         id: ksu_version
         run: |
           # 进入内核工作目录
@@ -810,7 +810,7 @@ jobs:
           tag_name: "${{ env.TAG_HEAD }}-${{ env.TIME }}"
           name: "${{ env.TAG_HEAD }}-${{ env.FULL_VERSION }}"
           body: |
-            ### 📱 欧加真 ${{ env.KSU_TYPENAME }}/${{ github.event.inputs.sukisu_branch }} SM8750 通用内核 | 构建信息
+            ### 📱 欧加真 ${{ env.KSU_TYPENAME }}/${{ github.event.inputs.sukisu_branch }}${{ github.event.inputs.kernelsu_author }} SM8750 通用内核 | 构建信息
             - 内核版本号: ${{ env.FULL_VERSION }}
             - 编译时间: ${{ env.TIME_FORM }}
             - 机型：欧加真骁龙8Elite通用 6.6.89 内核（基于一加13国际版 6.6.89 版官方OKI源码）
