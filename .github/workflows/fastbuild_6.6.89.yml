@@ -574,23 +574,25 @@ jobs:
           sed -i 's/hooks.o //g' "./selinux/Makefile"
           cat "./baseband-guard/sepatch.txt" >> "./selinux/Makefile"
 
-      - name: HymoFS
+      - name: HymoFS 补丁
         if: inputs.hymofs
-        env:
-          SUSFS_ENABLE: ${{ github.event.inputs.susfs_enable }}
         run: |
           set -e
           echo "Applying HymoFS patch..."
           cd kernel_workspace
           PATCH_FILE="hymofs.patch"
-          if [ "$SUSFS_ENABLE" = "true" ]; then
+          HYMOFS_PATCH_HASH=$(git ls-remote https://github.com/Anatdx/HymoFS HEAD | awk '{print $1}')
+          echo "=============================="
+          echo "🌟 Current HymoFS patch hash: ${HYMOFS_PATCH_HASH}"
+          echo "=============================="
+          if [ "${{ github.event.inputs.susfs_enable }}" = "true" ]; then
             echo "Using HymoFS patch with SUSFS"
             wget -q -O "$PATCH_FILE" \
-              https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/main/patch/hymofs_with_susfs.patch
+              https://raw.githubusercontent.com/Anatdx/HymoFS/${HYMOFS_PATCH_HASH}/patch/hymofs_with_susfs.patch
           else
             echo "Using HymoFS patch without SUSFS"
             wget -q -O "$PATCH_FILE" \
-              https://raw.githubusercontent.com/Anatdx/HymoFS/refs/heads/main/patch/hymofs.patch
+              https://raw.githubusercontent.com/Anatdx/HymoFS/${HYMOFS_PATCH_HASH}/patch/hymofs.patch
           fi
           cd common
           patch -p1 -F 3 < "../$PATCH_FILE"
