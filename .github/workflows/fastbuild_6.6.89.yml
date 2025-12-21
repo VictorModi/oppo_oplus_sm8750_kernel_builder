@@ -648,7 +648,8 @@ jobs:
             -f CaseFolding.txt \
             -n NormalizationCorrections.txt \
             -t NormalizationTest.txt \
-            -o utf8data.c
+            -o utf8data.c \
+            -v
           echo "=============="
           echo "对比 shipped 版本"
           echo "=============="
