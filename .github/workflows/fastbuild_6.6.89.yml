@@ -637,7 +637,8 @@ jobs:
           echo "开始生成 utf8data "
           echo "=============="
           cd ../..
-          make ARCH=arm64 olddefconfig
+          # make ARCH=arm64 olddefconfig
+          touch .config
           make REGENERATE_UTF8DATA=1 fs/unicode/
           rm -rf .config
           echo "=============="
