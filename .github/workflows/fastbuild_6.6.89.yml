@@ -637,7 +637,7 @@ jobs:
           wget https://github.com/torvalds/linux/commit/91b587ba79e1b68bb718d12b0758dbcdab4e9cb7.patch -O f2fs.patch
           wget https://raw.githubusercontent.com/VictorModi/oppo_oplus_realme_sm8750/refs/heads/main/other_patch/remove_ignore_init.patch
           cd common
-          patch -p1 -N < ../f2fs.patch
+          patch -p1 -N < ../f2fs.patch || true
           patch -p1 < ../remove_ignore_init.patch
           echo "修补相关Patch完成"
           cd fs/unicode
