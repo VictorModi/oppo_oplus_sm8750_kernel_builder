@@ -142,10 +142,11 @@ jobs:
           
           echo "正在克隆源码仓库..."
           aria2c -s16 -x16 -k1M ${{ github.event.inputs.kernel_source_url }} -o common.zip && 
-          mkdir -p common &&
-          unzip -q common.zip -d common --strip-components=1 &&
-          rm -rf common.zip &
-          
+          unzip -q common.zip
+          TOP_DIR="$(unzip -Z -1 common.zip | head -n1 | cut -d/ -f1)"
+          mv "$TOP_DIR" common
+          rm -f common.zip
+
           echo "正在克隆llvm-clang18工具链..." &&
           mkdir -p clang18 &&
           aria2c -s16 -x16 -k1M https://github.com/cctv18/oneplus_sm8650_toolchain/releases/download/LLVM-Clang18-r510928/clang-r510928.zip -o clang.zip &&
