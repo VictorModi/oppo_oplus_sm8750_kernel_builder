@@ -142,8 +142,8 @@ jobs:
           
           echo "正在克隆源码仓库..."
           aria2c -s16 -x16 -k1M ${{ github.event.inputs.kernel_source_url }} -o common.zip && 
-          unzip -q common.zip && 
-          mv "android_kernel_common_oneplus_sm8750-oneplus-sm8750_v_16.0.0_oneplus_13_6.6.89" common &&
+          mkdir -p common &&
+          unzip -q common.zip -d common --strip-components=1 &&
           rm -rf common.zip &
           
           echo "正在克隆llvm-clang18工具链..." &&
