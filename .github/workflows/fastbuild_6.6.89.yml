@@ -328,10 +328,24 @@ jobs:
             patch -p1 < 69_hide_stuff.patch || true
 
             FILE="fs/proc/base.c"
+            INCLUDE_LINE='#include <linux/susfs_def.h>'
             if ! grep -q "#include <linux/susfs_def.h>" "$FILE"; then
                 echo "未检测到 #include <linux/susfs_def.h>，正在添加..."
                 # 在文件最后一个 include 后插入
-                sed -i '/^#include /h;${x;/./{x;s/$/\n#include <linux\/susfs_def.h>/;}}' "$FILE"
+                awk -v inc="$INCLUDE_LINE" '
+                {
+                    lines[NR] = $0
+                    if ($0 ~ /^#include <linux\/[^\/]+>/)
+                        last = NR
+                }
+                END {
+                    for (i = 1; i <= NR; i++) {
+                        print lines[i]
+                        if (i == last)
+                            print inc
+                    }
+                }
+                ' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
                 echo "添加完成！"
             else
                 echo "#include <linux/susfs_def.h> 已经存在，无需修改。"
