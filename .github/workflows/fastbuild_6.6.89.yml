@@ -330,8 +330,8 @@ jobs:
             FILE="fs/proc/base.c"
             if ! grep -q "#include <linux/susfs_def.h>" "$FILE"; then
                 echo "未检测到 #include <linux/susfs_def.h>，正在添加..."
-                # 在文件第一行前插入
-                sed -i '1i#include <linux/susfs_def.h>' "$FILE"
+                # 在文件最后一个 include 后插入
+                sed -i '/^#include /h;${x;/./{x;s/$/\n#include <linux\/susfs_def.h>/;}}' "$FILE"
                 echo "添加完成！"
             else
                 echo "#include <linux/susfs_def.h> 已经存在，无需修改。"
