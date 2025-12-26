@@ -99,11 +99,11 @@ on:
           required: true
           type: boolean
           default: 'false'
-      target_commit_hash:
-          description: '需要指明的 SukiSU Commit Hash'
+      build_time:
+          description: '编译时间 `Fri Sep 19 06:13:40 UTC 2025`'
           required: false
           type: string
-          default: ''
+          default: 'Fri Sep 19 06:13:40 UTC 2025'
       kernel_source_url:
           description: '内核源码来自？'
           required: true
@@ -149,8 +149,8 @@ jobs:
 
           echo "正在克隆llvm-clang工具链..." &&
           mkdir -p clang &&
-          aria2c -s16 -x16 -k1M https://github.com/VictorModi/VictorModi/releases/download/idk/clang-r574158.tar.gz -o clang.zip &&
-          tar -xzvf clang.zip -C clang &&
+          aria2c -s16 -x16 -k1M https://github.com/cctv18/oneplus_sm8650_toolchain/releases/download/LLVM-Clang18-r510928/clang-r510928.zip -o clang.zip &&
+          unzip -q clang.zip -d clang18 &&
           rm -rf clang.zip &
           
           echo "正在克隆构建工具..." &&
@@ -222,10 +222,6 @@ jobs:
           if [[ ${{ github.event.inputs.ksu_type }} == "sukisu" ]]; then
             echo "正在配置SukiSU Ultra..."
              curl -LSs "https://raw.githubusercontent.com/${{ github.event.inputs.sukisu_repo_suffix }}/refs/heads/main/kernel/setup.sh" -o setup.sh
-            # 如果 target_commit_hash 不为空，则执行 sed 修改
-            if [ -n "${{ github.event.inputs.target_commit_hash }}" ]; then
-              sed -i "/git pull/ a\ git reset --hard ${{ github.event.inputs.target_commit_hash }}" setup.sh
-            fi
             # 执行修改后的脚本
             bash setup.sh ${{ github.event.inputs.sukisu_branch }}
             rm -rf ./setup.sh
@@ -790,6 +786,9 @@ jobs:
           sudo rm -rf /usr/local/lib/android &
           sudo rm -rf /opt/ghc &
           sudo rm -rf /opt/hostedtoolcache/CodeQL &
+          export KBUILD_BUILD_USER=kleaf &&
+          export KBUILD_BUILD_HOST=build-host &&
+          export KBUILD_BUILD_TIMESTAMP="{{ github.event.inputs.build_time }}" &&
           make -j$(nproc --all) LLVM=1 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
               CC="ccache clang" LD="ld.lld" HOSTLD=ld.lld O=out KCFLAGS+=-O2 \
               KCFLAGS+=-Wno-error KCFLAGS+=-Wno-default-const-init-field-unsafe \
